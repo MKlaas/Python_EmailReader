@@ -60,15 +60,18 @@ def check_shared(namespace,recip = None):
 		subject_line = message.subject
 		body_content = message.body
 
-		request_detail_csv = message.body[107:116]
-		
-		if subject_line == "eSchedule Ingestion Successful" and request_detail_csv == today_formatted or request_detail_csv == next_week_formatted:
+		request_detail_csv_long = message.body[107:116]
+		#print (request_detail_csv_long)
+		request_detail_csv_short = message.body[107:115]
+		#print (request_detail_csv_short)
+
+		if subject_line == "eSchedule Ingestion Successful" and request_detail_csv_long == today_formatted or request_detail_csv_long == next_week_formatted or request_detail_csv_short == today_formatted or request_detail_csv_short == next_week_formatted:
 			print ("---------------------") 
 			print ("TO: " + to_line)
 			#print ("Request Detail CSV : " + request_detail_csv)
 			print ("BODY: " + body_content)
 			print ("---------------------") 
-			if request_detail_csv == today_formatted:
+			if request_detail_csv_long == today_formatted or request_detail_csv_short == today_formatted:
 				try:
 					attachments = message.attachments
 					attachment = attachments.Item(1)
@@ -83,8 +86,8 @@ def check_shared(namespace,recip = None):
 				except Exception as e: 
 					print (e)
 					print ("Trouble retrieving todays file")
-					
-			if request_detail_csv == next_week_formatted:
+			if request_detail_csv_long == next_week_formatted or request_detail_csv_short == next_week_formatted:
+				
 				try:
 					attachments = message.attachments
 					attachment = attachments.Item(1)
@@ -103,6 +106,8 @@ def check_shared(namespace,recip = None):
 			if obtained_todays and obtained_nextweeks:
 				print ("All Files Retrieved")
 				return
+			else:
+				print("Only Detected One File")
 		message = messages.GetNext()
 		i += 1
 
@@ -174,14 +179,18 @@ def check_shared_monday(namespace,recip = None):
 		subject_line = message.subject
 		body_content = message.body
 
-		request_detail_csv = message.body[107:116]
-		if subject_line == "eSchedule Ingestion Successful" and request_detail_csv == today_formatted or request_detail_csv == next_week_formatted or request_detail_csv == sunday_formatted or request_detail_csv == saturday_formatted:
+		request_detail_csv_long = message.body[107:116]
+		#print (request_detail_csv_long)
+		request_detail_csv_short = message.body[107:115]
+		#print (request_detail_csv_short)
+
+		if subject_line == "eSchedule Ingestion Successful" and request_detail_csv_long == today_formatted or request_detail_csv_long == next_week_formatted or request_detail_csv_short == today_formatted or request_detail_csv_short == next_week_formatted:
 			print ("---------------------") 
 			print ("TO: " + to_line)
 			#print ("Request Detail CSV : " + request_detail_csv)
 			print ("BODY: " + body_content)
 			print ("---------------------") 
-			if request_detail_csv == today_formatted:
+			if request_detail_csv_long == today_formatted or request_detail_csv_short == today_formatted:
 				try:
 					attachments = message.attachments
 					attachment = attachments.Item(1)
@@ -197,7 +206,7 @@ def check_shared_monday(namespace,recip = None):
 				except Exception as e: 
 					print (e)
 					print ("Trouble retrieving todays file")
-			if request_detail_csv == sunday_formatted:
+			if request_detail_csv_long == sunday_formatted or request_detail_csv_short == sunday_formatted:
 				try:
 					attachments = message.attachments
 					attachment = attachments.Item(1)
@@ -210,7 +219,7 @@ def check_shared_monday(namespace,recip = None):
 						obtained_sundays = True
 				except:
 					print ("Trouble retrieving sundays file")
-			if request_detail_csv == saturday_formatted:
+			if request_detail_csv_long == saturday_formatted or request_detail_csv_short == saturday_formatted:
 				try:
 					attachments = message.attachments
 					attachment = attachments.Item(1)
@@ -223,7 +232,7 @@ def check_shared_monday(namespace,recip = None):
 						obtained_sundays = True
 				except:
 					print ("Trouble retrieving saturdays file")
-			if request_detail_csv == next_week_formatted:
+			if request_detail_csv_long == next_week_formatted or request_detail_csv_short == next_week_formatted:
 				try:
 					attachments = message.attachments
 					attachment = attachments.Item(1)
