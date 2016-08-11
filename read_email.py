@@ -1,3 +1,4 @@
+# may need to run this command in windows command prompt for encoding issue ' chcp 65001  '
 import win32com.client
 import datetime
 import time
@@ -38,7 +39,7 @@ def check_shared(namespace,recip = None):
 	#message = messages.GetFirst()
 	#subject_line = message.subject
 	#body_content = message.body
-	i = 0
+	
 	today = datetime.date.today()
 	today_formatted = format(today, '%#m/%#d/%Y')
 	print ("Todays Date : ", today_formatted)       # test
@@ -53,12 +54,18 @@ def check_shared(namespace,recip = None):
 	obtained_todays = False
 	obtained_nextweeks = False
 	
+	# sort by receive time
+	messages.Sort("ReceivedTime", True)
 	message = messages.GetFirst()
-	while i < 100:
+	i = 0
+	while i < 10:
 		to_line = message.to
 		#from_line = message.from
 		subject_line = message.subject
 		body_content = message.body
+		print (to_line)
+		print(subject_line)
+		print(body_content)
 
 		request_detail_csv_long = message.body[107:116]
 		#print (request_detail_csv_long)
@@ -171,7 +178,10 @@ def check_shared_monday(namespace,recip = None):
 	obtained_saturdays = False
 	obtained_nextweeks = False
 	
+	# sort by receive time
+	messages.Sort("ReceivedTime", True)
 	message = messages.GetFirst()
+	i = 0
 	while i < 100:
 		
 		to_line = message.to
@@ -273,8 +283,9 @@ for attempt in range(10):
 		else:
 			print("Not monday")
 			check_shared(outlook,account)
-	except:
+	except Exception as e:
 		print("Nothing detected, waiting six minutes....")
+		print (str(e))
 		time.sleep(360)
 	else:
 		# script failed/didn't detect new email
